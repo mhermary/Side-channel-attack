@@ -3,6 +3,7 @@
 #include <string.h>
 
 //TODO: concatenate some jibberish to the actual password when the lengths dont match to not give the real password length away
+//TODO: use clock() in time.h to see number of clock cycles between password tries. https://www.tutorialspoint.com/c_standard_library/c_function_clock.htm
 
 int main()
 {
