@@ -23,7 +23,7 @@ int main()
 
     while(fgets(input_pw, sizeof(input_pw), fp)) {      //Reads line by line from passwords.txt
         unsigned int pw_length = strlen(password);      //Local variable for length to speed it up
-        unsigned int input_pw_length = strlen(input_pw) - 2;    //See how it is on ARM machines and adjust this
+        unsigned int input_pw_length = strlen(input_pw) - 1;    //-1 on lab machines
 #ifdef TERMINAL_PRINT
         printf("\nTrying out password: %s", input_pw);  //See which line is being read
         printf("length is: %d\n", input_pw_length);    //Ensure proper length. This changes depending on which machine its running on for some reason.
