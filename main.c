@@ -1,7 +1,9 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <time.h>
 //#define TERMINAL_PRINT
+#define CLOCKING
 
 //TODO: concatenate some jibberish to the actual password when the lengths dont match to not give the real password length away
 //TODO: use clock() in time.h to see number of clock cycles between password tries. https://www.tutorialspoint.com/c_standard_library/c_function_clock.htm
@@ -22,6 +24,9 @@ int main()
     char input_pw[32];  //max size password of 32 characters
 
     while(fgets(input_pw, sizeof(input_pw), fp)) {      //Reads line by line from passwords.txt
+#ifdef CLOCKING
+        clock_t start_t = clock();
+#endif
         unsigned int pw_length = strlen(password);      //Local variable for length to speed it up
         unsigned int input_pw_length = strlen(input_pw) - 1;    //-1 on lab machines
 #ifdef TERMINAL_PRINT
@@ -61,6 +66,10 @@ int main()
 #ifdef TERMINAL_PRINT
         printf("Nonce PW was %s\n", nonce_pw);
 #endif
+#ifdef CLOCKING
+    clock_t end_t = clock();
+#endif
+    printf("Password %s took %ld cycles", input_pw, start_t-end_t);
     }
     fclose(fp);                                         //Close opened file
     return 0;
