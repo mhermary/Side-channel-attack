@@ -1,0 +1,1 @@
+arm-none-linux-gnueabi-gcc -static -march=armv5 main.c -o main.exe
