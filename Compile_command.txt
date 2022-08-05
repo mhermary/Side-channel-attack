@@ -1,3 +1,6 @@
 arm-none-linux-gnueabi-gcc -static -march=armv5 main.c -o main.exe
 
 do from tmp file since project diretory can be too large
+
+If you just want to compile on your own system use GCC:
+gcc main.c -O main.exe
