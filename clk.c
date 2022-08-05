@@ -1,5 +1,6 @@
 //Compile this with gcc clk.c -O clk.exe
 //Then just run it out of your terminal with ./clk.exe
+//Check https://www.tutorialspoint.com/c_standard_library/c_function_clock.htm for reference
 
 #include <time.h>
 #include <stdio.h>
