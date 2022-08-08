@@ -3,7 +3,7 @@
 #include <string.h>
 #include <time.h>
 #include <stdbool.h>
-#define TERMINAL_PRINT
+//#define TERMINAL_PRINT
 //#define CLOCKING
 
 //TODO: use clock() in time.h to see number of clock cycles between password tries. https://www.tutorialspoint.com/c_standard_library/c_function_clock.htm
@@ -27,7 +27,9 @@ int main()
         register bool pw_match = true;                          //Keep track if passwords match
         register bool nonce_pw_match = true;                    //To write to if passwords dont match to consume the same power
 #ifdef CLOCKING
-        clock_t start_t = clock();
+        clock_t start_t, end_t;
+        double total_t;
+        start_t = clock();
 #endif
         unsigned int pw_length = strlen(password);              //Local variable for length to speed it up
         unsigned int input_pw_length = strlen(input_pw) - 1;    //-1 on lab machines, -2 on laptop. CHANGE BEFORE COMMITTING
@@ -83,12 +85,10 @@ int main()
         printf("Nonce PW was %s\n", nonce_pw);
 #endif
 #ifdef CLOCKING
-        clock_t end_t = clock();
-        double total_time;
-        double num = (double)end_t - (double)start_t;
-        total_time = num/CLOCKS_PER_SEC;
-        printf("Took %lf to %lf cycles to try %s", (double)start_t, (double)end_t, input_pw);
-        printf("Total diff time is %lf\n", total_time);
+        end_t = clock();
+        total_t = (double)(end_t - start_t) / CLOCKS_PER_SEC;
+        printf("Took %ld to %ld cycles to try %s", start_t, end_t, input_pw);
+        printf("Total time taken by CPU: %f\n", total_t  );
 #endif
         if(pw_match)
         {
