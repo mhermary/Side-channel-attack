@@ -6,7 +6,8 @@
 //#define TERMINAL_PRINT
 //#define CLOCKING
 
-//TODO: use clock() in time.h to see number of clock cycles between password tries. https://www.tutorialspoint.com/c_standard_library/c_function_clock.htm
+//TODO match user input to actual PW length
+//TODO turn for loop into while loop and add unrolling and increment in between loops
 
 int main()
 {
@@ -27,14 +28,14 @@ int main()
         double total_t;
         start_t = clock();
 #endif
-        unsigned int input_pw_length = strlen(input_pw) - 1;    //-1 on lab machines, -2 on laptop.
+        register unsigned int input_pw_length = strlen(input_pw) - 1;    //-1 on lab machines, -2 on laptop.
         if (input_pw_length < 4){
             printf("ERROR - Password length must be greater than 3\n");
             return 1;
         }
-        unsigned int pw_length = strlen(password);              //Local variable for length to speed it up
+        register unsigned int pw_length = strlen(password);              //Local variable for length to speed it up
         register bool pw_match = true;                          //Keep track if passwords match
-        register bool nonce_pw_match = true;                    //To write to if passwords dont match to consume the same power
+        register bool concat_pw_match = true;                    //To write to if passwords dont match to consume the same power
 #ifdef TERMINAL_PRINT
         printf("\nTrying out password: %s ", input_pw);         //See which line is being read
         printf("length is: %u\n", input_pw_length);             //Ensure proper length. This changes depending on which machine its running on for some reason.
@@ -51,40 +52,49 @@ int main()
 #endif
             pw_match = false;
         }
-        else{
-            nonce_pw_match = false;
-        }
-        char nonce_pw[input_pw_length];
-        unsigned int i;                                         //unsigned int since strlen returns unsigned int
-        for(i=0; i < input_pw_length; i++)
+        else
         {
-            nonce_pw[i] = password[i%pw_length];                //Fake password to compare so the real length isnt given away
-            if(input_pw[i] != nonce_pw[i])
+            concat_pw_match = false;
+        }
+        char concat_pw[input_pw_length];
+        char inverse_concat_pw[input_pw_length];
+        register unsigned int i;                                         //unsigned int since strlen returns unsigned int
+        for(i=0; i < input_pw_length; i=i+1)
+        {
+            concat_pw[i] = password[i%pw_length];                       //Fake password to compare so the real length isnt given away
+            inverse_concat_pw[i] = ~password[i%pw_length];
+            if(input_pw[i] != concat_pw[i])
             {
 #ifdef TERMINAL_PRINT
                 printf("ERROR - Password characters did not match\n");
-                printf("%c did not match %c\n", input_pw[i], nonce_pw[i]);  //Character by character comparison
+                printf("%c did not match %c\n", input_pw[i], concat_pw[i]);  //Character by character comparison
 #endif
                 if(pw_match){
                     pw_match = false;
                 }
-                else{
-                    nonce_pw_match = !nonce_pw_match;
+                else if (!pw_match){
+                    concat_pw_match = !concat_pw_match;                 //boolean write to consume same power
                 }
-            }
-            else if(input_pw[i] != ~nonce_pw[i])
+            }//if the character is incorrect
+            else if(input_pw[i] != inverse_concat_pw[i])                      //bitwise inverted to consume same power 
             {
                 //just comparison for bit inversion to consume same power
-            }
+                if(concat_pw_match){
+                    concat_pw_match = false;
+                }
+                else if (!pw_match){
+                    concat_pw_match = !concat_pw_match;                 //boolean write to consume same power
+                }
+            }//if the character is correct
             else
             {
 #ifdef TERMINAL_PRINT
-                printf("%c matched %c\n", input_pw[i], nonce_pw[i]);        //So no characters are missed
+                printf("%c matched %c\n", input_pw[i], concat_pw[i]);        //So no characters are missed
 #endif
             }
         }
 #ifdef TERMINAL_PRINT
-        printf("Nonce PW was %s\n", nonce_pw);
+        printf("Concat PW was %s\n", concat_pw);
 #endif
 #ifdef CLOCKING
         end_t = clock();
