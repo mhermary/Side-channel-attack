@@ -14,9 +14,7 @@ int main()
     FILE *fp = fopen("passwords.txt", "r");                     //Opens password text file with read permissions
     if (fp == NULL)
     {  
-#ifdef TERMINAL_PRINT
         printf("ERROR - Could not open file\n");
-#endif
         return 1;
     }
     
@@ -24,15 +22,19 @@ int main()
 
     while(fgets(input_pw, sizeof(input_pw), fp))                //Reads line by line from passwords.txt
     {
-        register bool pw_match = true;                          //Keep track if passwords match
-        register bool nonce_pw_match = true;                    //To write to if passwords dont match to consume the same power
 #ifdef CLOCKING
         clock_t start_t, end_t;
         double total_t;
         start_t = clock();
 #endif
+        unsigned int input_pw_length = strlen(input_pw) - 1;    //-1 on lab machines, -2 on laptop.
+        if (input_pw_length < 4){
+            printf("ERROR - Password length must be greater than 3\n");
+            return 1;
+        }
         unsigned int pw_length = strlen(password);              //Local variable for length to speed it up
-        unsigned int input_pw_length = strlen(input_pw) - 1;    //-1 on lab machines, -2 on laptop. CHANGE BEFORE COMMITTING
+        register bool pw_match = true;                          //Keep track if passwords match
+        register bool nonce_pw_match = true;                    //To write to if passwords dont match to consume the same power
 #ifdef TERMINAL_PRINT
         printf("\nTrying out password: %s ", input_pw);         //See which line is being read
         printf("length is: %u\n", input_pw_length);             //Ensure proper length. This changes depending on which machine its running on for some reason.
