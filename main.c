@@ -6,7 +6,6 @@
 //#define TERMINAL_PRINT
 //#define CLOCKING
 
-//TODO match user input to actual PW length
 //TODO turn for loop into while loop and add unrolling and increment in between loops
 
 int main()
@@ -59,12 +58,14 @@ int main()
         char concat_pw[pw_length];
         char inverse_concat_pw[pw_length];
         register unsigned int i;                                         //unsigned int since strlen returns unsigned int
-        for(i=0; i < pw_length; i=i+1)
+        while(i < pw_length)
         {
             concat_pw[i] = input_pw[i%input_pw_length];                       //Fake password to compare so the real length isnt given away
             inverse_concat_pw[i] = ~input_pw[i%pw_length];
             if(input_pw[i] != password[i])
             {
+                i++;        //incrementing i in all 3 if statements since it will only ever enter one
+                            // this allows for pipelining for the second half of the loop
 #ifdef TERMINAL_PRINT
                 printf("ERROR - Password characters did not match\n");
                 printf("%c did not match %c\n", input_pw[i], concat_pw[i]);  //Character by character comparison
@@ -78,6 +79,7 @@ int main()
             }//if the character is incorrect
             else if(input_pw[i] != inverse_concat_pw[i])                      //bitwise inverted to consume same power 
             {
+                i++;
                 //just comparison for bit inversion to consume same power
                 if(concat_pw_match){
                     concat_pw_match = false;
@@ -88,6 +90,41 @@ int main()
             }//if the character is correct, consume the same amount of power
             else
             {
+                i++;
+#ifdef TERMINAL_PRINT
+                printf("%c matched %c\n", input_pw[i], concat_pw[i]);        //So no characters are missed
+#endif
+            }
+            concat_pw[i] = input_pw[i%input_pw_length];                       //Fake password to compare so the real length isnt given away
+            inverse_concat_pw[i] = ~input_pw[i%pw_length];
+            if(input_pw[i] != password[i])
+            {
+                i++;
+#ifdef TERMINAL_PRINT
+                printf("ERROR - Password characters did not match\n");
+                printf("%c did not match %c\n", input_pw[i], concat_pw[i]);  //Character by character comparison
+#endif
+                if(pw_match){
+                    pw_match = false;
+                }
+                else if (!pw_match){
+                    concat_pw_match = !concat_pw_match;                 //boolean write to consume same power
+                }
+            }//if the character is incorrect
+            else if(input_pw[i] != inverse_concat_pw[i])                      //bitwise inverted to consume same power 
+            {
+                i++;
+                //just comparison for bit inversion to consume same power
+                if(concat_pw_match){
+                    concat_pw_match = false;
+                }
+                else if (!pw_match){
+                    concat_pw_match = !concat_pw_match;                 //boolean write to consume same power
+                }
+            }//if the character is correct, consume the same amount of power
+            else
+            {
+                i++;
 #ifdef TERMINAL_PRINT
                 printf("%c matched %c\n", input_pw[i], concat_pw[i]);        //So no characters are missed
 #endif
