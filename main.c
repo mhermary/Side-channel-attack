@@ -11,7 +11,7 @@
 
 int main()
 {
-    const char password[] = "deez";                             //Correct password
+    const char password[] = "ThisClassIsFun!";                             //Correct password
     FILE *fp = fopen("passwords.txt", "r");                     //Opens password text file with read permissions
     if (fp == NULL)
     {  
@@ -29,8 +29,8 @@ int main()
         start_t = clock();
 #endif
         register unsigned int input_pw_length = strlen(input_pw) - 1;    //-1 on lab machines, -2 on laptop.
-        if (input_pw_length < 4){
-            printf("ERROR - Password length must be greater than 3\n");
+        if (input_pw_length < 4 || input_pw_length > 31){
+            printf("ERROR - Password length must be between 4 and 31.\n");
             return 1;
         }
         register unsigned int pw_length = strlen(password);              //Local variable for length to speed it up
@@ -56,14 +56,14 @@ int main()
         {
             concat_pw_match = false;
         }
-        char concat_pw[input_pw_length];
-        char inverse_concat_pw[input_pw_length];
+        char concat_pw[pw_length];
+        char inverse_concat_pw[pw_length];
         register unsigned int i;                                         //unsigned int since strlen returns unsigned int
-        for(i=0; i < input_pw_length; i=i+1)
+        for(i=0; i < pw_length; i=i+1)
         {
-            concat_pw[i] = password[i%pw_length];                       //Fake password to compare so the real length isnt given away
-            inverse_concat_pw[i] = ~password[i%pw_length];
-            if(input_pw[i] != concat_pw[i])
+            concat_pw[i] = input_pw[i%input_pw_length];                       //Fake password to compare so the real length isnt given away
+            inverse_concat_pw[i] = ~input_pw[i%pw_length];
+            if(input_pw[i] != password[i])
             {
 #ifdef TERMINAL_PRINT
                 printf("ERROR - Password characters did not match\n");
@@ -85,7 +85,7 @@ int main()
                 else if (!pw_match){
                     concat_pw_match = !concat_pw_match;                 //boolean write to consume same power
                 }
-            }//if the character is correct
+            }//if the character is correct, consume the same amount of power
             else
             {
 #ifdef TERMINAL_PRINT
