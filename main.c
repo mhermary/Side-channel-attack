@@ -21,7 +21,7 @@ int main()
     while(fgets(input_pw, sizeof(input_pw), fp))                //Reads line by line from passwords.txt
     {
         __asm__ __volatile__(
-            ";starting while loop here"
+            "@starting while loop here"
         );
 #ifdef CLOCKING
         clock_t start_t, end_t;
@@ -46,7 +46,7 @@ int main()
         printf("\n");                                           //Newline for once the input password has been read out
 #endif
         __asm__ __volatile__(
-            ";comparing password lengths"
+            "@comparing password lengths"
         );
         if(input_pw_length != pw_length)                        //See how it runs on ARM machines and adjust this
         {
@@ -60,7 +60,7 @@ int main()
             concat_pw_match = false;
         }
         __asm__ __volatile__(
-            ";creating concat_pw and inverse_concat_pw"
+            "@creating concat_pw and inverse_concat_pw"
         );
         char concat_pw[pw_length];
         char inverse_concat_pw[pw_length];
@@ -68,7 +68,7 @@ int main()
         while(i < pw_length)
         {
             __asm__ __volatile__(
-                ";starting letter by letter"
+                "@starting letter by letter"
             );
             concat_pw[i] = input_pw[i%input_pw_length];         //Fake password to compare so the real length isnt given away
             inverse_concat_pw[i] = ~input_pw[i%pw_length];
@@ -170,7 +170,7 @@ int main()
         printf("Total time taken by CPU: %f\n", total_t  );
 #endif
         __asm__ __volatile__(
-            ";checking if passwords match"
+            "@checking if passwords match"
         );
         if(pw_match)
         {
