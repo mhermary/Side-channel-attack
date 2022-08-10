@@ -3,7 +3,7 @@
 #include <string.h>
 #include <time.h>
 #include <stdbool.h>
-//#define TERMINAL_PRINT
+#define TERMINAL_PRINT
 //#define CLOCKING
 //#define ASSEMBLY
 
@@ -24,7 +24,7 @@ int main()
 #ifdef ASSEMBLY
         __asm__ __volatile__(
             "@starting while loop here"
-        );
+        );//Injecting comments into the assembly to see place in C code
 #endif
 #ifdef CLOCKING
         clock_t start_t, end_t;
@@ -51,7 +51,7 @@ int main()
 #ifdef ASSEMBLY
         __asm__ __volatile__(
             "@comparing password lengths"
-        );
+        );//Injecting comments into the assembly to see place in C code
 #endif
         if(input_pw_length != pw_length)                        //See how it runs on ARM machines and adjust this
         {
@@ -67,7 +67,7 @@ int main()
 #ifdef ASSEMBLY
         __asm__ __volatile__(
             "@creating concat_pw and inverse_concat_pw"
-        );
+        );//Injecting comments into the assembly to see place in C code
 #endif
         char concat_pw[pw_length];
         char inverse_concat_pw[pw_length];
@@ -77,7 +77,7 @@ int main()
 #ifdef ASSEMBLY
             __asm__ __volatile__(
                 "@starting letter by letter"
-            );
+            );//Injecting comments into the assembly to see place in C code
 #endif
             concat_pw[i] = input_pw[i%input_pw_length];         //Fake password to compare so the real length isnt given away
             inverse_concat_pw[i] = ~input_pw[i%pw_length];
@@ -169,9 +169,6 @@ int main()
 #endif
             }
         }
-#ifdef TERMINAL_PRINT
-        printf("Concat PW was %s\n", concat_pw);
-#endif
 #ifdef CLOCKING
         end_t = clock();
         total_t = (double)(end_t - start_t) / CLOCKS_PER_SEC;
@@ -181,7 +178,7 @@ int main()
 #ifdef ASSEMBLY
         __asm__ __volatile__(
             "@checking if passwords match"
-        );
+        );//Injecting comments into the assembly to see place in C code
 #endif
         if(pw_match)
         {
