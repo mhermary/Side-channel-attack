@@ -20,6 +20,9 @@ int main()
 
     while(fgets(input_pw, sizeof(input_pw), fp))                //Reads line by line from passwords.txt
     {
+        __asm__ __volatile__(
+            ";starting while loop here"
+        );
 #ifdef CLOCKING
         clock_t start_t, end_t;
         double total_t;
@@ -42,6 +45,9 @@ int main()
         }
         printf("\n");                                           //Newline for once the input password has been read out
 #endif
+        __asm__ __volatile__(
+            ";comparing password lengths"
+        );
         if(input_pw_length != pw_length)                        //See how it runs on ARM machines and adjust this
         {
 #ifdef TERMINAL_PRINT
@@ -53,11 +59,17 @@ int main()
         {
             concat_pw_match = false;
         }
+        __asm__ __volatile__(
+            ";creating concat_pw and inverse_concat_pw"
+        );
         char concat_pw[pw_length];
         char inverse_concat_pw[pw_length];
         register unsigned int i;                                //unsigned int since strlen returns unsigned int
         while(i < pw_length)
         {
+            __asm__ __volatile__(
+                ";starting letter by letter"
+            );
             concat_pw[i] = input_pw[i%input_pw_length];         //Fake password to compare so the real length isnt given away
             inverse_concat_pw[i] = ~input_pw[i%pw_length];
             if(input_pw[i] != password[i])
@@ -157,6 +169,9 @@ int main()
         printf("Took %ld to %ld cycles to try %s", start_t, end_t, input_pw);
         printf("Total time taken by CPU: %f\n", total_t  );
 #endif
+        __asm__ __volatile__(
+            ";checking if passwords match"
+        );
         if(pw_match)
         {
             printf("Password match: %s", input_pw);
