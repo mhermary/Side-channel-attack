@@ -64,7 +64,7 @@ main:
 	str	r3, [fp, #-100]
 #APP
 @ 23 "main.c" 1
-	;starting while loop here
+	@starting while loop here
 @ 0 "" 2
 	sub	r3, fp, #88
 	mov	r0, r3
@@ -95,7 +95,7 @@ main:
 	strb	r3, [fp, #-17]
 #APP
 @ 48 "main.c" 1
-	;comparing password lengths
+	@comparing password lengths
 @ 0 "" 2
 	ldr	r2, [fp, #-28]
 	ldr	r3, [fp, #-24]
@@ -110,7 +110,7 @@ main:
 .L9:
 #APP
 @ 62 "main.c" 1
-	;creating concat_pw and inverse_concat_pw
+	@creating concat_pw and inverse_concat_pw
 @ 0 "" 2
 	ldr	r0, [fp, #-24]
 	mov	r1, r0
@@ -242,7 +242,7 @@ main:
 .L28:
 #APP
 @ 70 "main.c" 1
-	;starting letter by letter
+	@starting letter by letter
 @ 0 "" 2
 	ldr	r4, [fp, #-16]
 	ldr	r3, [fp, #-16]
@@ -472,7 +472,7 @@ main:
 	bcc	.L28
 #APP
 @ 172 "main.c" 1
-	;checking if passwords match
+	@checking if passwords match
 @ 0 "" 2
 	ldrb	r3, [fp, #-18]	@ zero_extendqisi2
 	cmp	r3, #0
